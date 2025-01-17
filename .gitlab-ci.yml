@@ -1,0 +1,55 @@
+stages: # List of stages for jobs, and their order of execution
+  - build-backend
+  - build-frontend
+  - test-backend
+  - test-frontend
+  - deploy
+
+# Backend build stage
+build-backend-job:  # This job runs in the build stage, which runs first.
+  stage: build-backend
+  image: gradle:7.5-jdk17  # Use a Gradle image with JDK included
+  script:
+    - echo "Building backend with Gradle..."
+    - cd backend
+    - ./gradlew clean build
+  artifacts:
+    paths:
+      - backend/build/libs/
+
+# Frontend build stage
+build-frontend-job: # This job runs in the build stage, which runs first.
+  stage: build-frontend
+  image: node:18  # Use a Node.js image with npm included
+  script:
+    - echo "Building frontend with npm..."
+    - export CI=false  # Disable treating warnings as errors; TODO: change to true
+    - cd frontend
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - frontend/build/
+
+# Backend test stage
+unit-test-backend-job:
+  stage: test-backend
+  image: gradle:7.5-jdk17  # Use a Gradle image with JDK included
+  script:
+    - echo "Running backend tests with JUnit..."
+    - cd backend
+    - ./gradlew test
+  artifacts:
+    paths:
+      - backend/build/test-results/
+    when: always
+
+
+# Deployment stage (Placeholder for actual deployment commands)
+deploy-job:
+  stage: deploy
+  script:
+    - echo "Deploying application..."
+    # Add deployment commands here, for example:
+    # - scp -r backend/build/libs/ myuser@myserver:/path/to/deploy
+    # - scp -r frontend/build/ myuser@myserver:/path/to/deploy/frontend

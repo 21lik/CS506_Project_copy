@@ -1,0 +1,44 @@
+services:
+  db:
+    image: mysql/mysql-server:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ARRAY
+      MYSQL_DATABASE: WordleDB
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - wordledat:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: ARRAY
+    ports:
+       - "8080:80"
+  backend:
+    build: ./backend
+    restart: always
+    command: ./gradlew bootRun
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+          ignore:
+            - ./backend/.gradle
+    ports:
+       - "5000:8080"
+  frontend:
+    build: ./frontend
+    restart: always
+    command: npm start
+    ports:
+      - "80:3000"
+volumes:
+    wordledat:

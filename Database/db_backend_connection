@@ -1,0 +1,26 @@
+//database login
+        String url = "simons@cs506x06.cs.wisc.edu:/nobackup/project/compose.yml";
+        String username = "root";
+        String password = "ARRAY";
+
+UPDATE: now looks like this is the correct format, IP address is incorrect
+
+//database login
+        String host = "128.105.37.188"; 
+        String port = "3306"; 
+        String database = "WordleDB";
+        String user = "root";
+        String password = "ARRAY";
+
+        String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false";
+
+UPDATE: everything is dockerized and now should look something like this
+
+//database login
+String host = "db"; 
+String port = "3306"; 
+String database = "WordleDB";
+String user = "root";
+String password = "ARRAY";
+
+String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
